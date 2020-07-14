@@ -11,6 +11,10 @@ import org.junit.runner.notification.Failure;
  */
 public class UnitTestResult {
 
+    public static final String TIMEOUT_EXCEPTION = "org.junit.runners.model.TestTimedOutException";
+    public static final String ASSERTION_ERROR = "java.lang.AssertionError";
+    public static final String COMPARISON_FAILURE = "junit.framework.ComparisonFailure";
+
     private UnitTest test;
     private int repNumber;
 
@@ -120,10 +124,10 @@ public class UnitTestResult {
         this.exceptionType = rootCause.getClass().getName();
         this.exceptionMessage = rootCause.getMessage();
     
-        if (this.exceptionType == "org.junit.runners.model.TestTimedOutException") {
+        if (this.exceptionType.equals(TIMEOUT_EXCEPTION)) {
             this.timedOut = true;
 
-        } else if (this.exceptionType == "java.lang.AssertionError")  {
+        } else if (this.exceptionType.equals(ASSERTION_ERROR))  {
 
                 // based on messages thrown: https://github.com/junit-team/junit4/blob/master/src/main/java/org/junit/Assert.java
                 String s = this.exceptionMessage;
@@ -167,7 +171,7 @@ public class UnitTestResult {
                     this.actualValue = s.substring(s.lastIndexOf("Actual: ")+8);
                 }
                 // 'expected not same' - not processed
-        } else if (this.exceptionType == "junit.framework.ComparisonFailure")  {
+        } else if (this.exceptionType.equals(COMPARISON_FAILURE))  {
 
                 this.expectedValue = ((junit.framework.ComparisonFailure)rootCause).getExpected();
                 this.actualValue = ((junit.framework.ComparisonFailure)rootCause).getActual();
