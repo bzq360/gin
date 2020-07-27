@@ -1,9 +1,9 @@
-package faulty_programs;//Corrected package name from quixey to java_programs.extra;
+package faulty_programs;//Corrected package name from quixey to extra;
 //package quixey;
 
 import java.util.*;
 
-//Corrected class from from java_programs.NESTED_PARENS to java_programs.NESTED_PARENS_orig
+//Corrected class from from NESTED_PARENS to NESTED_PARENS_orig
 public class NESTED_PARENS_orig {
     public static void main(String[] args) throws Exception {
         Scanner in = new Scanner(System.in);

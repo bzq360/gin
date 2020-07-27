@@ -1,6 +1,5 @@
 package faulty_programs;
 
-import faulty_programs.LEVENSHTEIN;
 
 public class LEVENSHTEIN_TEST {
     @org.junit.Test(timeout = 3000)

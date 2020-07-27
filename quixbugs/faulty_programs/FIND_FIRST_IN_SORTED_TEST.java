@@ -1,6 +1,5 @@
 package faulty_programs;
 
-import faulty_programs.FIND_FIRST_IN_SORTED;
 
 public class FIND_FIRST_IN_SORTED_TEST {
     @org.junit.Test(timeout = 3000)

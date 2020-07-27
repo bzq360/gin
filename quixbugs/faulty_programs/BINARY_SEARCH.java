@@ -1,4 +1,4 @@
-package faulty_programs;//Corrected package name from quixey to java_programs.extra;
+package faulty_programs;//Corrected package name from quixey to extra;
 //package quixey;
 
 public class BINARY_SEARCH {

@@ -22,11 +22,10 @@ import gin.test.UnitTestResultSet;
 
 /**
  * Method-based General GP search.
- *
  */
 
 public abstract class GP extends Sampler {
-    
+
     @Argument(alias = "et", description = "Edit type: this can be a member of the EditType enum (LINE,STATEMENT,MATCHED_STATEMENT,MODIFY_STATEMENT); the fully qualified name of a class that extends gin.edit.Edit, or a comma separated list of both")
     protected String editType = EditType.MATCHED_STATEMENT.toString();
 
@@ -34,20 +33,22 @@ public abstract class GP extends Sampler {
     protected Integer genNumber = 1;
 
     @Argument(alias = "in", description = "Number of individuals")
-    protected Integer indNumber = 10; 
+    protected Integer indNumber = 10;
 
     @Argument(alias = "ms", description = "Random seed for mutation selection")
     protected Integer mutationSeed = 123;
 
     @Argument(alias = "is", description = "Random seed for individual selection")
     protected Integer individualSeed = 123;
-    
-    /**allowed edit types for sampling: parsed from editType*/
+
+    /**
+     * allowed edit types for sampling: parsed from editType
+     */
     protected List<Class<? extends Edit>> editTypes;
 
     protected Random mutationRng;
     protected Random individualRng;
-    
+
     public GP(String[] args) {
         super(args);
         Args.parseOrExit(this, args);
@@ -63,11 +64,11 @@ public abstract class GP extends Sampler {
     }
 
     private void printAdditionalArguments() {
-        Logger.info("Edit types: "+ editTypes);
-        Logger.info("Number of generations: "+ genNumber);
-        Logger.info("Number of individuals: "+ indNumber);
-        Logger.info("Random seed for mutation selection: "+ mutationSeed);
-        Logger.info("Random seed for individual selection: "+ individualSeed);
+        Logger.info("Edit types: " + editTypes);
+        Logger.info("Number of generations: " + genNumber);
+        Logger.info("Number of individuals: " + indNumber);
+        Logger.info("Random seed for mutation selection: " + mutationSeed);
+        Logger.info("Random seed for individual selection: " + individualSeed);
     }
 
     private void setup() {
@@ -85,14 +86,14 @@ public abstract class GP extends Sampler {
 
             // Setup SourceFile for patching
             SourceFile sourceFile = SourceFile.makeSourceFileForEditTypes(editTypes, method.getFileSource().getPath(), Collections.singletonList(method.getMethodName()));
-            
+
             search(method.getClassName(), method.getGinTests(), sourceFile);
 
         }
 
     }
 
-       /*============== Abstract methods  ==============*/
+    /*============== Abstract methods  ==============*/
 
     // Simple patch selection
     protected abstract Patch select(List<Patch> patches);
@@ -104,16 +105,16 @@ public abstract class GP extends Sampler {
     protected abstract List<Patch> createCrossoverPatches(List<Patch> patches, SourceFile sourceFile);
 
     // Calculate fitness
-    protected abstract long fitness(UnitTestResultSet results);
+    protected abstract double fitness(UnitTestResultSet results);
 
     // Calculate fitness threshold, for selection to the next generation
-    protected abstract boolean fitnessThreshold(UnitTestResultSet results, long originalFitness);
+    protected abstract boolean fitnessThreshold(UnitTestResultSet results, double originalFitness);
 
     // GP search strategy
     protected abstract void search(String className, List<UnitTest> tests, SourceFile sourceFile);
 
     // Compare two fitness values
-    protected abstract long compareFitness(long newFitness, long oldFitness);
+    protected abstract double compareFitness(double newFitness, double oldFitness);
 
     /*============== Helper methods  ==============*/
 
@@ -125,7 +126,7 @@ public abstract class GP extends Sampler {
                         , "TotalExecutionTime(ms)"
                         , "Fitness"
                         , "FitnessImprovement"
-                        };
+        };
         try {
             outputFileWriter = new CSVWriter(new FileWriter(outputFile));
             outputFileWriter.writeNext(entry);
@@ -136,15 +137,15 @@ public abstract class GP extends Sampler {
         }
     }
 
-    protected void writePatch(UnitTestResultSet results, String className, long fitness, long improvement) {
+    protected void writePatch(UnitTestResultSet results, String className, double fitness, double improvement) {
         String[] entry = {className
                         , results.getPatch().toString()
                         , Boolean.toString(results.getCleanCompile())
                         , Boolean.toString(results.allTestsSuccessful())
                         , Float.toString(results.totalExecutionTime() / 1000000.0f)
-                        , Long.toString(fitness)
-                        , Long.toString(improvement)
-                        };
+                        , String.format("%.3f", fitness)
+                        , String.format("%.3f", improvement)
+        };
         outputFileWriter.writeNext(entry);
     }
 

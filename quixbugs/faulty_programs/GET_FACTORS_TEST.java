@@ -1,5 +1,11 @@
 package faulty_programs;
 
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+
 public class GET_FACTORS_TEST {
     @org.junit.Test(timeout = 3000)
     public void test_0() throws Exception {
@@ -76,6 +82,26 @@ public class GET_FACTORS_TEST {
         java.util.ArrayList result = GET_FACTORS.get_factors((int)9837);
         String resultFormatted = QuixFixOracleHelper.format(result,true);
         org.junit.Assert.assertEquals("[3,3,1093]", resultFormatted);
+    }
+
+    // Evosuite
+    @Test(timeout = 4000)
+    public void test_11()  throws Throwable  {
+        ArrayList<Integer> arrayList0 = GET_FACTORS.get_factors(86);
+        assertEquals(2, arrayList0.size());
+        assertFalse(arrayList0.contains(86));
+    }
+
+    @Test(timeout = 4000)
+    public void test_12()  throws Throwable  {
+        ArrayList<Integer> arrayList0 = GET_FACTORS.get_factors(1);
+        assertEquals(0, arrayList0.size());
+    }
+
+    @Test(timeout = 4000)
+    public void test_13()  throws Throwable  {
+        ArrayList<Integer> arrayList0 = GET_FACTORS.get_factors(0);
+        assertTrue(arrayList0.contains(0));
     }
 }
 

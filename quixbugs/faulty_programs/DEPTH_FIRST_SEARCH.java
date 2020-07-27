@@ -12,7 +12,7 @@ import java.util.Set;
  * @author derricklin
  */
 public class DEPTH_FIRST_SEARCH {
-    public boolean depth_first_search(Node startnode, Node goalnode) {
+    public static boolean depth_first_search(Node startnode, Node goalnode) {
         Set<Node> nodesvisited = new HashSet<>();
         class Search {
             boolean search(Node node) {

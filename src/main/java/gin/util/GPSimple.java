@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gin.test.UnitTestResult;
 import org.pmw.tinylog.Logger;
 
 import gin.Patch;
@@ -17,31 +18,31 @@ import gin.test.UnitTestResultSet;
 
 /**
  * Method-based GPSimple search.
- *
  */
 
 public abstract class GPSimple extends GP {
-    
+
     public GPSimple(String[] args) {
         super(args);
-    }   
+    }
 
     // Constructor used for testing
     public GPSimple(File projectDir, File methodFile) {
         super(projectDir, methodFile);
-    }   
+    }
 
     // Calculate fitness
     @Override
-    protected abstract long fitness(UnitTestResultSet results);
+    protected abstract double fitness(UnitTestResultSet results);
 
     // Calculate fitness threshold, for selection to the next generation
     @Override
-    protected abstract boolean fitnessThreshold(UnitTestResultSet results, long orig);
-    
-     // Compare two fitness values, result of comparison printed on commandline if > 0
+    protected abstract boolean fitnessThreshold(UnitTestResultSet results, double orig);
+
+    // Compare two fitness values, result of comparison printed on commandline if > 0
     @Override
-    protected abstract long compareFitness(long newFitness, long best);
+    protected abstract double compareFitness(double newFitness, double best);
+
 
     /*============== Implementation of abstract methods  ==============*/
 
@@ -54,15 +55,19 @@ public abstract class GPSimple extends GP {
         UnitTestResultSet results = testPatch(className, tests, origPatch);
 
         // Calculate fitness and record result
-        long orig = fitness(results);
+        double orig = fitness(results);
         super.writePatch(results, className, orig, 0);
 
         // Keep best 
-        long best = orig;
+        double best = orig;
 
         // Generation 0
-        Map<Patch, Long> population = new HashMap<>();
+        Map<Patch, Double> population = new HashMap<>();
         population.put(origPatch, orig);
+
+        int testcases = results.getResults().size();
+        int passed = getPassed(results);
+        Logger.info(passed + "/" + testcases + " passed");
 
         for (int g = 0; g < genNumber; g++) {
 
@@ -72,7 +77,7 @@ public abstract class GPSimple extends GP {
             Logger.info("Creating generation: " + (g + 1));
 
             // Current generation
-            Map<Patch, Long> newPopulation = new HashMap<>();
+            Map<Patch, Double> newPopulation = new HashMap<>();
 
             // Keep a list of patches after crossover
             List<Patch> crossoverPatches = createCrossoverPatches(patches, sourceFile);
@@ -81,7 +86,7 @@ public abstract class GPSimple extends GP {
             while (crossoverPatches.size() < indNumber) {
                 crossoverPatches.add(select(patches));
             }
-            
+
             // Mutate the newly created population and check runtime
             for (Patch patch : crossoverPatches) {
 
@@ -92,21 +97,18 @@ public abstract class GPSimple extends GP {
 
                 // Test the patched source file
                 results = testPatch(className, tests, patch);
-                long newFitness = fitness(results);
-
-                if (results.allTestsSuccessful()) {
-                    Logger.info("Fix found: " + patch);
-                    System.exit(0);
-                }
+                double newFitness = fitness(results);
 
                 // If all tests pass, add patch to the mating population, check for new bestTime 
                 if (fitnessThreshold(results, orig)) {
                     super.writePatch(results, className, newFitness, compareFitness(newFitness, orig));
                     newPopulation.put(patch, newFitness);
-                    long better = compareFitness(newFitness, best);
+                    double better = compareFitness(newFitness, best);
                     if (better > 0) {
                         Logger.info("Better patch found: " + patch);
                         Logger.info("Fitness improvement over best found so far: " + better);
+                        passed = getPassed(results);
+                        Logger.info(passed + "/" + testcases + " passed");
                         best = newFitness;
                     }
                 } else {
@@ -114,13 +116,22 @@ public abstract class GPSimple extends GP {
                 }
             }
 
-            population = new HashMap<Patch, Long>(newPopulation);
+            population = new HashMap(newPopulation);
             if (population.isEmpty()) {
                 population.put(origPatch, orig);
             }
-            
-              }
 
+        }
+
+    }
+
+    private int getPassed(UnitTestResultSet results) {
+        int count = 0;
+        for (UnitTestResult result : results.getResults()) {
+            if (result.getPassed())
+                count++;
+        }
+        return count;
     }
 
     // Simple patch selection, returns a clone of the selected patch
@@ -168,7 +179,6 @@ public abstract class GPSimple extends GP {
         List<Edit> list2 = patch2.getEdits();
         Patch patch = new Patch(sourceFile);
         for (int i = 0; i < patch1.size() / 2; i++) {
-
             patch.add(list1.get(i));
         }
         for (int i = patch2.size() / 2; i < patch2.size(); i++) {

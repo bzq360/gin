@@ -1,8 +1,7 @@
 package gin.misc;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -86,7 +85,8 @@ public class FullyQualifiedNamesTest {
                 "mypackage.TestInnerClasses$TestInnerClassB.methodB()"
         });
 
-        assertThat(methodNames, is(expected));
+        assertEquals(methodNames, expected);
+//        assertThat(methodNames, is(expected));
         
         FullyQualifiedNames.annotateCompilationUnit(compilationUnitEnum);
         
@@ -100,7 +100,8 @@ public class FullyQualifiedNamesTest {
                 "mypackage.EnumTest$InnerClass.moreStuff()"
         });
 
-        assertThat(methodNamesEnum, is(expectedEnum));
+        assertEquals(methodNamesEnum, expectedEnum);
+//        assertThat(methodNamesEnum, is(expectedEnum));
         
     }
 

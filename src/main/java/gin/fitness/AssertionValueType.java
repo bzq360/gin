@@ -3,7 +3,11 @@ package gin.fitness;
 public enum AssertionValueType {
     NULL,
     BOOLEAN,
+    INT,
     DOUBLE,
-    ARRAY,
-    STRING
+    STRING,
+    DOUBLE_ARRAY,
+    STRING_ARRAY,
+    INT_ARRAY,
+    NOT_MATCHED
 }
