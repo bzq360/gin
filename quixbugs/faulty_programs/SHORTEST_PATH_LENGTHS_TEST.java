@@ -6,13 +6,14 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class SHORTEST_PATH_LENGTHS_TEST {
 
     // Case 1: Basic graph input.
 	@Test
-	public void test1() {
+	public void test_0() {
 		Map<List<Integer>, Integer> graph = new HashMap<>();
 		graph.put(new ArrayList<Integer>(Arrays.asList(0, 2)), 3);
 		graph.put(new ArrayList<Integer>(Arrays.asList(0, 5)), 5);
@@ -33,7 +34,7 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 
 	// Case 2: Linear graph input.
 	@Test
-	public void test2() {
+	public void test_1() {
 		Map<List<Integer>, Integer> graph2 = new HashMap<>();
 		graph2.put(new ArrayList<Integer>(Arrays.asList(0, 1)), 3);
 		graph2.put(new ArrayList<Integer>(Arrays.asList(1, 2)), 5);
@@ -51,7 +52,7 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 
 	// Case 3: Disconnected graphs input.
 	@Test
-	public void test3() {
+	public void test_2() {
 		Map<List<Integer>, Integer> graph3 = new HashMap<>();
 		graph3.put(new ArrayList<Integer>(Arrays.asList(0, 1)), 3);
 		graph3.put(new ArrayList<Integer>(Arrays.asList(2, 3)), 5);
@@ -68,7 +69,7 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 
 	@Test
 	// Case 4: Strongly connected graph input.
-	public void test4s() {
+	public void test_3() {
 		Map<List<Integer>, Integer> graph4 = new HashMap<>();
 		graph4.put(new ArrayList<Integer>(Arrays.asList(0, 1)), 3);
 		graph4.put(new ArrayList<Integer>(Arrays.asList(1, 2)), 5);
@@ -81,6 +82,100 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 				//Correct (2,1) 2  and bad (2,1) 1
 				assertEquals((Integer)2,length_by_path.get(edge));
 			}		
+		}
+	}
+
+	// evosuite
+
+
+	@Test(timeout = 60000)
+	public void test_4()  throws Throwable  {
+		SHORTEST_PATH_LENGTHS sHORTEST_PATH_LENGTHS0 = new SHORTEST_PATH_LENGTHS();
+		int int0 = 0;
+		int int1 = 1;
+		HashMap<List<Integer>, Integer> hashMap0 = null;
+		try {
+			hashMap0 = new HashMap<List<Integer>, Integer>(1, 0);
+			fail("Expecting exception: IllegalArgumentException");
+
+		} catch(IllegalArgumentException e) {
+			//
+			// Illegal load factor: 0.0
+			//
+		}
+	}
+
+
+
+	@Test(timeout = 60000)
+	public void test_5()  throws Throwable  {
+		HashMap<List<Integer>, Integer> hashMap0 = new HashMap<List<Integer>, Integer>();
+		Map<List<Integer>, Integer> map0 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(0, hashMap0);
+		SHORTEST_PATH_LENGTHS sHORTEST_PATH_LENGTHS0 = new SHORTEST_PATH_LENGTHS();
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths(0, hashMap0);
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths((-520), map0);
+		HashMap<List<Integer>, Integer> hashMap1 = new HashMap<List<Integer>, Integer>();
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths((-2728), hashMap1);
+	}
+
+
+	@Test(timeout = 60000)
+	public void test_6()  throws Throwable  {
+		SHORTEST_PATH_LENGTHS sHORTEST_PATH_LENGTHS0 = new SHORTEST_PATH_LENGTHS();
+		HashMap<List<Integer>, Integer> hashMap0 = new HashMap<List<Integer>, Integer>();
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths(1, hashMap0);
+		int int0 = 1;
+		HashMap<List<Integer>, Integer> hashMap1 = new HashMap<List<Integer>, Integer>();
+		Map<List<Integer>, Integer> map0 = SHORTEST_PATH_LENGTHS.shortest_path_lengths((-1430), hashMap1);
+		Map<List<Integer>, Integer> map1 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(1, map0);
+		Map<List<Integer>, Integer> map2 = SHORTEST_PATH_LENGTHS.shortest_path_lengths((-1), map1);
+		Map<List<Integer>, Integer> map3 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(1, map0);
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths(1, map0);
+		LinkedList<Integer> linkedList0 = new LinkedList<Integer>();
+		Integer integer0 = new Integer((-1));
+		Integer.getInteger("B2rdB0%", integer0);
+		hashMap1.put(linkedList0, integer0);
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths((-1430), map2);
+		hashMap1.put(linkedList0, (Integer) null);
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths((-1), map1);
+		Map<List<Integer>, Integer> map4 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(0, map3);
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths((-1430), map3);
+		Map<List<Integer>, Integer> map5 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(2, map4);
+		// Undeclared exception!
+		SHORTEST_PATH_LENGTHS.shortest_path_lengths(156, map5);
+	}
+
+	@Test(timeout = 60000)
+	public void test_7()  throws Throwable  {
+		int int0 = (-1886);
+		HashMap<List<Integer>, Integer> hashMap0 = new HashMap<List<Integer>, Integer>();
+		LinkedList<Integer> linkedList0 = new LinkedList<Integer>();
+		LinkedList<Integer> linkedList1 = new LinkedList<Integer>();
+		int int1 = (-1);
+		Integer integer0 = new Integer((-1));
+		try {
+			Integer.decode("ks_xv<{");
+			fail("Expecting exception: NumberFormatException");
+
+		} catch(NumberFormatException e) {
+			//
+			// For input string: \"ks_xv<{\"
+			//
+		}
+	}
+
+
+	@Test(timeout = 60000)
+	public void test_8()  throws Throwable  {
+		// Undeclared exception!
+		try {
+			SHORTEST_PATH_LENGTHS.shortest_path_lengths(465, (Map<List<Integer>, Integer>) null);
+			fail("Expecting exception: NullPointerException");
+
+		} catch(NullPointerException e) {
+			//
+			// no message in exception (getMessage() returned null)
+			//
 		}
 	}
 

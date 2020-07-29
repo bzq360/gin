@@ -1,6 +1,5 @@
 package faulty_programs;
 
-import faulty_programs.FIND_IN_SORTED;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
