@@ -30,16 +30,15 @@ public class NovelFitnessCalculator {
         // sum up distance of all
         for (UnitTestResult result : failedTests) {
             String exceptionType = result.getExceptionType();
+            double nor_dis = 0;
             if (exceptionType.equals(UnitTestResult.ASSERTION_ERROR) || exceptionType.equals(UnitTestResult.COMPARISON_FAILURE)) {
                 double distance = getDistanceUnknownType(result.getAssertionExpectedValue(), result.getAssertionActualValue(), false);
-                score += distance;
+                nor_dis = normalize(distance, 1) / numOfFailedTests;
             } else {
-                score += MAX_INT;
+                nor_dis = normalize(MAX_INT, 1) / numOfFailedTests;
             }
+            score += nor_dis;
         }
-
-        // normalize score within [0,1]
-        score = normalize(score, 1);
 
         score += numOfFailedTests;
 
