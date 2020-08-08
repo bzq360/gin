@@ -1,10 +1,14 @@
 package gin.util;
 
+import gin.Patch;
 import gin.fitness.NovelFitnessCalculator;
+import gin.test.UnitTest;
 import gin.test.UnitTestResultSet;
 
+import java.util.List;
 
-public class GPNovelFix extends GPSimple {
+
+public class GPNovelFix extends GPFix {
 
     public static void main(String[] args) {
         GPNovelFix sampler = new GPNovelFix(args);
@@ -17,22 +21,16 @@ public class GPNovelFix extends GPSimple {
         super(args);
     }
 
+    @Override
+    protected UnitTestResultSet initFitness(String className, List<UnitTest> tests, Patch origPatch) {
+        return null;
+    }
+
     /*============== Implementation of abstract methods  ==============*/
 
     // Calculate fitness
     protected double fitness(UnitTestResultSet results) {
         return NovelFitnessCalculator.calculate(results);
-    }
-
-    // Calculate fitness threshold, for selection to the next generation
-    protected boolean fitnessThreshold(UnitTestResultSet results, double orig) {
-        double newFit = fitness(results);
-        return newFit <= orig;
-    }
-
-    // Compare two fitness values, result of comparison printed on commandline if > 0
-    protected double compareFitness(double newFitness, double best) {
-        return best - newFitness;
     }
 
 }

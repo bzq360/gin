@@ -101,7 +101,7 @@ public abstract class GP extends Sampler {
     protected abstract void search(TargetMethod method, Patch origPatch);
 
     // Individual selection
-    protected abstract List<Patch> select(Map<Patch, Long> population, Patch origPatch, long origFitness);
+    protected abstract List<Patch> select(Map<Patch, Double> population, Patch origPatch, double origFitness);
 
     // Mutation operator
     protected abstract Patch mutate(Patch oldPatch);
@@ -113,16 +113,13 @@ public abstract class GP extends Sampler {
     protected abstract UnitTestResultSet initFitness(String className, List<UnitTest> tests, Patch origPatch);
 
     // Calculate fitness
-    protected abstract long fitness(UnitTestResultSet results);
+    protected abstract double fitness(UnitTestResultSet results);
 
     // Calculate fitness threshold, for selection to the next generation
-    protected abstract boolean fitnessThreshold(UnitTestResultSet results, long originalFitness);
-
-    // GP search strategy
-    protected abstract void search(String className, List<UnitTest> tests, SourceFile sourceFile);
+    protected abstract boolean fitnessThreshold(UnitTestResultSet results, double originalFitness);
 
     // Compare two fitness values
-    protected abstract long compareFitness(long newFitness, long oldFitness);
+    protected abstract double compareFitness(double newFitness, double oldFitness);
 
     /*============== Helper methods  ==============*/
 
@@ -145,14 +142,14 @@ public abstract class GP extends Sampler {
         }
     }
 
-    protected void writePatch(UnitTestResultSet results, String methodName, long fitness, long improvement) {
+    protected void writePatch(UnitTestResultSet results, String methodName, double fitness, double improvement) {
         String[] entry = {methodName
                         , results.getPatch().toString()
                         , Boolean.toString(results.getCleanCompile())
                         , Boolean.toString(results.allTestsSuccessful())
                         , Float.toString(results.totalExecutionTime() / 1000000.0f)
-                        , Long.toString(fitness)
-                        , Long.toString(improvement)
+                        , Double.toString(fitness)
+                        , Double.toString(improvement)
                         };
         outputFileWriter.writeNext(entry);
     }
