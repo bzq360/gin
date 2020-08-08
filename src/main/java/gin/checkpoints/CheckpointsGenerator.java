@@ -9,6 +9,7 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.metamodel.ForeachStmtMetaModel;
 import com.github.javaparser.metamodel.IntegerLiteralExprMetaModel;
 import gin.SourceFileTree;
+
 import javafx.util.Pair;
 
 import java.io.File;
@@ -62,7 +63,7 @@ public class CheckpointsGenerator {
             sf = sf.insertStatement(blockId, sid - 1, constructCheckpointStatement(cid++, entry.getValue().getKey()));
         }
 
-        System.out.println(sf);
+//        System.out.println(sf);
     }
 
     private Statement constructCheckpointStatement(int id, String vName) {

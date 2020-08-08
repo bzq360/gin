@@ -6,7 +6,6 @@ package correct_programs;
  */
 
 /**
- *
  * @author derricklin
  */
 public class TO_BASE {
@@ -17,7 +16,7 @@ public class TO_BASE {
         while (num > 0) {
             i = num % b;
             num = num / b; // floor division?
-            result = String.valueOf(alphabet.charAt(i))+result;
+            result = String.valueOf(alphabet.charAt(i)) + result;
         }
 
         return result;

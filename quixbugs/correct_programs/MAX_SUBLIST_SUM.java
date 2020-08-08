@@ -6,7 +6,6 @@ package correct_programs;
  */
 
 /**
- *
  * @author derricklin
  */
 public class MAX_SUBLIST_SUM {
@@ -15,7 +14,7 @@ public class MAX_SUBLIST_SUM {
         int max_so_far = 0;
 
         for (int x : arr) {
-            max_ending_here = Math.max(0,max_ending_here + x);
+            max_ending_here = Math.max(0, max_ending_here + x);
             max_so_far = Math.max(max_so_far, max_ending_here);
         }
 

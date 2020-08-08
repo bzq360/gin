@@ -6,7 +6,6 @@ package correct_programs;
  */
 
 /**
- *
  * @author derricklin
  */
 public class FIND_IN_SORTED {
@@ -18,7 +17,7 @@ public class FIND_IN_SORTED {
         if (x < arr[mid]) {
             return binsearch(arr, x, start, mid);
         } else if (x > arr[mid]) {
-            return binsearch(arr, x, mid+1, end);
+            return binsearch(arr, x, mid + 1, end);
         } else {
             return mid;
         }

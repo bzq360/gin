@@ -5,7 +5,6 @@ package correct_programs;
  */
 
 /**
- *
  * @author derricklin
  */
 public class LEVENSHTEIN {
@@ -16,10 +15,10 @@ public class LEVENSHTEIN {
             return levenshtein(source.substring(1), target.substring(1));
         } else {
             return 1 + Math.min(Math.min(
-                    levenshtein(source,              target.substring(1)),
+                    levenshtein(source, target.substring(1)),
                     levenshtein(source.substring(1), target.substring(1))),
                     levenshtein(source.substring(1), target)
-        );
+            );
         }
     }
 }
