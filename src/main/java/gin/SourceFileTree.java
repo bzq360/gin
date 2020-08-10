@@ -461,7 +461,15 @@ public class SourceFileTree extends SourceFile {
             return null;
         }
     }
-    
+
+    /**
+     * @param ID of node to get
+     * @return the original Node in Compilation Unit, which contains parent node
+     */
+    public Node getOriginalNode(int ID) {
+        return this.allNodes.getOrDefault(ID, null);
+    }
+
     /*============== the following are methods to get IDs and counts to assist in making edits ==============*/
     
     public List<Integer> getAllBlockIDs() {

@@ -264,6 +264,5 @@ public class Patch {
         return description.trim();
     }
 
-
 }
 

@@ -1,28 +1,17 @@
 package gin.checkpoints;
 
-import com.opencsv.CSVWriter;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class Checkpoint {
 
-    private static CSVWriter outputFileWriter = null;
+    protected int ID;
 
-    static {
-        try {
-            outputFileWriter = new CSVWriter(new FileWriter(new File("checkpoints.csv")));
-            String[] header = {"checkpointID", "variable name", "value"};
-            outputFileWriter.writeNext(header);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    protected String variableName;
 
-    public static void log(int cid, String vName, int value) {
-        String[] entry = {cid + "", vName, value + ""};
-        outputFileWriter.writeNext(entry);
+    protected int value;
+
+    protected Checkpoint(int ID, String variableName, int value) {
+        this.ID = ID;
+        this.variableName = variableName;
+        this.value = value;
     }
 
 }
