@@ -49,6 +49,14 @@ public class ARJAeFitnessCalculator {
             }
             score += distance;
         }
+
+        // the goal is to maximum the fitness score
+        score = 1 - normalize(score);
+
         return score;
+    }
+
+    private static double normalize(double x) {
+        return x / (x + 1);
     }
 }

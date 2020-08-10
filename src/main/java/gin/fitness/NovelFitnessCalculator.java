@@ -42,6 +42,9 @@ public class NovelFitnessCalculator {
 
         score += numOfFailedTests;
 
+        // the goal is to maximum the fitness
+        score = results.getResults().size() + 1 - score;
+
         return score;
     }
 

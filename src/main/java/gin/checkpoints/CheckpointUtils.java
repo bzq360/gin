@@ -18,10 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.javaparser.JavaParser.parseStatement;
 
@@ -85,9 +82,12 @@ public class CheckpointUtils {
     /*============== inserting checkpoints  ==============*/
 
     public static Patch insertCheckpoints(Patch orig) {
-        Map<Integer, Pair<String, Integer>> intVariables = new HashMap<>(); // <node id, (variable name, value)>
+        Map<Integer, AbstractMap.SimpleEntry<String, Integer>> intVariables = new HashMap<>(); // <node id, (variable name, value)>
 
         SourceFileTree sf = (SourceFileTree) orig.getSourceFile().copyOf();
+
+        System.out.println("before: -----------------------------------------------");
+        System.out.println(sf);
 
         // store integer variable declarations
         List<Integer> intLst = sf.getNodeIDsByClass(true, VariableDeclarationExpr.class);
@@ -107,7 +107,7 @@ public class CheckpointUtils {
             for (Node node : vd.getChildNodes()) {
                 if (node.getMetaModel() instanceof IntegerLiteralExprMetaModel) {
                     int value = ((IntegerLiteralExpr) node).asInt();
-                    intVariables.put(nid, new Pair<>(vName, value));
+                    intVariables.put(nid, new AbstractMap.SimpleEntry<>(vName, value));
                 }
             }
         }
@@ -119,14 +119,19 @@ public class CheckpointUtils {
 
         int cid = 0; // checkpoint id
         // insert checkpoints after for loop
-        for (Map.Entry<Integer, Pair<String, Integer>> entry : intVariables.entrySet()) {
+        for (Map.Entry<Integer, AbstractMap.SimpleEntry<String, Integer>> entry : intVariables.entrySet()) {
             sf = sf.insertStatement(blockId, sid, constructCheckpointStatement(cid++, entry.getValue().getKey()));
         }
         // insert checkpoints before for loop
-        for (Map.Entry<Integer, Pair<String, Integer>> entry : intVariables.entrySet()) {
+        for (Map.Entry<Integer, AbstractMap.SimpleEntry<String, Integer>> entry : intVariables.entrySet()) {
             sf = sf.insertStatement(blockId, sid - 1, constructCheckpointStatement(cid++, entry.getValue().getKey()));
         }
         numOfCheckpoints = cid;
+
+        System.out.println("after: -----------------------------------------------");
+        System.out.println(sf);
+
+
 
         return new Patch(sf);
     }
