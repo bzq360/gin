@@ -40,7 +40,7 @@ public class GPArjaEFix extends GPFix {
 
     @Override
     protected double compareFitness(double newFitness, double oldFitness) {
-        return oldFitness - newFitness;
+        return newFitness - oldFitness;
     }
 
 }

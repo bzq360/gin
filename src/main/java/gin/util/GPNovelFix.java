@@ -42,7 +42,7 @@ public class GPNovelFix extends GPSimple {
 
     @Override
     protected double compareFitness(double newFitness, double oldFitness) {
-        return oldFitness - newFitness;
+        return newFitness - oldFitness;
     }
 
 }

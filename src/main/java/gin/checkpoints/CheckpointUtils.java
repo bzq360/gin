@@ -128,8 +128,8 @@ public class CheckpointUtils {
         }
         numOfCheckpoints = cid;
 
-        System.out.println("after: -----------------------------------------------");
-        System.out.println(sf);
+//        System.out.println("after: -----------------------------------------------");
+//        System.out.println(sf);
 
 
 
@@ -144,8 +144,7 @@ public class CheckpointUtils {
     /*============== calculate distances between checkpoints  ==============*/
 
     // compute distance between checkpointLst and referenceCheckpointLst
-    // low is bad, high is good
-    // TODO: how to use test case successful or not info
+    // goal is to maximum the fitness score
     public static double computeDistance(int testCaseID, boolean origPass, boolean currPass) {
         double score = 0;
 
