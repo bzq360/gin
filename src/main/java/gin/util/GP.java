@@ -54,15 +54,14 @@ public abstract class GP extends Sampler {
     public GP(String[] args) {
         super(args);
         Args.parseOrExit(this, args);
-        editTypes = Edit.parseEditClassesFromString(editType);
-        printAdditionalArguments();
         setup();
+        printAdditionalArguments();
     }
 
     // Constructor used for testing
     public GP(File projectDir, File methodFile) {
         super(projectDir, methodFile);
-        editTypes = Edit.parseEditClassesFromString(editType);
+        setup();
     }
 
     private void printAdditionalArguments() {
@@ -76,21 +75,28 @@ public abstract class GP extends Sampler {
     private void setup() {
         mutationRng = new JDKRandomBridge(RandomSource.MT, Long.valueOf(mutationSeed));
         individualRng = new JDKRandomBridge(RandomSource.MT, Long.valueOf(individualSeed));
+        editTypes = Edit.parseEditClassesFromString(editType);
     }
 
     // Implementation of gin.util.Sampler's abstract method
     protected void sampleMethodsHook() {
-        writeNewHeader();
 
-        for (TargetMethod method : methodData) {
+        if ((indNumber < 1) || (genNumber < 1)) {
+            Logger.info("Please enter a positive number of generations and individuals.");
+        } else {
 
-            Logger.info("Running GP on method " + method);
+            writeNewHeader();
 
-            // Setup SourceFile for patching
-            SourceFile sourceFile = SourceFile.makeSourceFileForEditTypes(editTypes, method.getFileSource().getPath(), Collections.singletonList(method.getMethodName()));
-            
-            search(method, new Patch(sourceFile));
+            for (TargetMethod method : methodData) {
 
+                Logger.info("Running GP on method " + method);
+
+                // Setup SourceFile for patching
+                SourceFile sourceFile = SourceFile.makeSourceFileForEditTypes(editTypes, method.getFileSource().getPath(), Collections.singletonList(method.getMethodName()));
+
+                search(method, new Patch(sourceFile));
+
+            }
         }
 
     }

@@ -11,23 +11,24 @@ import gin.test.UnitTestResultSet;
 
 /**
  * Method-based GPRuntime search.
+ *
  */
 
 public class GPRuntime extends GPSimple {
-
+    
     public static void main(String[] args) {
         GPRuntime sampler = new GPRuntime(args);
         sampler.sampleMethods();
-    }
+    }   
 
     public GPRuntime(String[] args) {
         super(args);
-    }
+    }   
 
     // Constructor used for testing
     public GPRuntime(File projectDir, File methodFile) {
         super(projectDir, methodFile);
-    }
+    }   
 
     /*============== Implementation of abstract methods  ==============*/
 
@@ -40,14 +41,18 @@ public class GPRuntime extends GPSimple {
     // Calculate fitness
     protected double fitness(UnitTestResultSet results) {
 
-        return results.totalExecutionTime() / (double) 1000000;
-    }
+	double fitness = Double.MAX_VALUE;
+	if (results.getCleanCompile() && results.allTestsSuccessful()) {
+            return (double) (results.totalExecutionTime() / 1000000);
+	}
+	return fitness;
+    }   
 
     // Calculate fitness threshold, for selection to the next generation
     protected boolean fitnessThreshold(UnitTestResultSet results, double orig) {
-
+    
         return results.allTestsSuccessful();
-    }
+    }   
 
     // Compare two fitness values, newFitness better if result > 0
     protected double compareFitness(double newFitness, double oldFitness) {
