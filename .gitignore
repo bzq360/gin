@@ -46,3 +46,4 @@ examples/unittests/ExampleWithInnerClassTest.class
 /checkpoint_logs/
 
 nbproject/
+/checkpoint_generated_patches.csv
