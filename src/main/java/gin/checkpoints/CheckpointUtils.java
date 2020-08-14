@@ -9,15 +9,14 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.PrimitiveType;
 import com.github.javaparser.metamodel.IntegerLiteralExprMetaModel;
 import com.opencsv.CSVWriter;
-import gin.Patch;
 import gin.SourceFileTree;
-import javafx.util.Pair;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static com.github.javaparser.JavaParser.parseStatement;
@@ -43,6 +42,7 @@ public class CheckpointUtils {
         // setup csv writer (optional)
         if (write) {
             try {
+                Files.createDirectories(Paths.get("checkpoint_logs/"));
                 String fname = "checkpoint_logs/checkpoints_" + checkpointCounter + ".csv";
                 File file = new File(fname);
                 Files.deleteIfExists(file.toPath());
@@ -81,13 +81,11 @@ public class CheckpointUtils {
 
     /*============== inserting checkpoints  ==============*/
 
-    public static Patch insertCheckpoints(Patch orig) {
+    public static SourceFileTree insertCheckpoints(SourceFileTree inSourceFile) {
         Map<Integer, AbstractMap.SimpleEntry<String, Integer>> intVariables = new HashMap<>(); // <node id, (variable name, value)>
 
-        SourceFileTree sf = (SourceFileTree) orig.getSourceFile().copyOf();
+        SourceFileTree sf = (SourceFileTree) inSourceFile.copyOf();
 
-        System.out.println("before: -----------------------------------------------");
-        System.out.println(sf);
 
         // store integer variable declarations
         List<Integer> intLst = sf.getNodeIDsByClass(true, VariableDeclarationExpr.class);
@@ -114,6 +112,12 @@ public class CheckpointUtils {
 
         // assume we have only 1 foreach stmt in this case
         List<Integer> forLst = sf.getNodeIDsByClass(true, ForeachStmt.class);
+
+        if (forLst.size() == 0) {
+            numOfCheckpoints = 0;
+            return sf;
+        }
+
         int sid = forLst.get(0);
         int blockId = sf.getBlockIDsInTargetMethod().get(0);
 
@@ -128,12 +132,7 @@ public class CheckpointUtils {
         }
         numOfCheckpoints = cid;
 
-//        System.out.println("after: -----------------------------------------------");
-//        System.out.println(sf);
-
-
-
-        return new Patch(sf);
+        return sf;
     }
 
     private static Statement constructCheckpointStatement(int id, String vName) {
@@ -145,24 +144,44 @@ public class CheckpointUtils {
 
     // compute distance between checkpointLst and referenceCheckpointLst
     // goal is to maximum the fitness score
-    public static double computeDistance(int testCaseID, boolean origPass, boolean currPass) {
-        double score = 0;
-
+    public static double computeDistance(int testCaseID, boolean origPass, boolean currPass, double alpha, double beta) {
         if (checkpointsLst.size() != referenceCheckpointsLst.size()) {
             Logger.error("the number of checkpoints between reference and current programs are different!");
         }
 
+        double score = 0;
         int startIndex = testCaseID * numOfCheckpoints;
         for (int i = startIndex; i < startIndex + numOfCheckpoints; i++) {
             int curr = checkpointsLst.get(i).value;
             int ref = referenceCheckpointsLst.get(i).value;
             double distance = Math.abs(curr - ref);
             distance = normalize(distance);
-            score += (1 - distance);
+            if (!origPass && !currPass) {
+                if (distance > 0.375) {
+                    score += 0.5 + 0.5 * distance;
+                } else {
+                    score += distance;
+                }
+            } else if (origPass && !currPass) {
+                score += 1 - distance;
+            } else if (origPass) {
+                score += 0.7 * (1 - distance) + 0.3 * alpha;
+            } else {
+                score += 0.5 + 0.35 * distance + 0.15 * beta;
+            }
         }
-//        System.out.println("* distance = " + score); // TODO: delete
+
+        score = score / checkpointsLst.size();
+            // TODO: delete
+//        System.out.println("---------------------------------------------------");
+//        System.out.println("test case id: " + testCaseID + "; score = " + score);
+//        System.out.println("---------------------------------------------------");
 
         return score;
+    }
+
+    public static boolean isValidCheckpoints() {
+        return referenceCheckpointsLst.size() != 0 && referenceCheckpointsLst.size() == checkpointsLst.size();
     }
 
 

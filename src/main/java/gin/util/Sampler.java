@@ -103,7 +103,7 @@ public abstract class Sampler {
             "AssertionActualValue", "NoOp", "EditsValid"};
     private static final Integer DEFAULT_ID = 0; // default id for MethodIndex
 
-    private int patchCount = 0;
+    protected int patchCount = 0;
 
     /*============== Structures holding all project data  ==============*/
 

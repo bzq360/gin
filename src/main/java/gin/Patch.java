@@ -26,7 +26,11 @@ public class Patch {
     protected LinkedList<Edit> edits = new LinkedList<>();
     protected SourceFile sourceFile;
     private Class<?> superClassOfEdits;
-    
+
+    // store the applied sourcefile for checkpoint
+    protected SourceFile appliedSourceFile;
+
+
     // we need both of the following:
     
     /**
@@ -146,6 +150,9 @@ public class Patch {
             }
         }
 
+        // store the source file after applying edits
+        appliedSourceFile = patchedSourceFile;
+
         try {
             return patchedSourceFile.getSource();
         } catch (ClassCastException e) {
@@ -157,7 +164,16 @@ public class Patch {
         }
         
     }
-    
+
+    /**
+     * this function must be called after applyCP
+     * @return the source file after applying edits
+     */
+    public SourceFile getAppliedSourceFile() {
+        return appliedSourceFile;
+    }
+
+
     /**add a random edit to this patch of a specific class*/
     public void addRandomEditOfClass(Random rng, Class<? extends Edit> allowableEditType) {
     	addRandomEditOfClasses(rng, Collections.singletonList(allowableEditType));

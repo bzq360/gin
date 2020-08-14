@@ -40,6 +40,11 @@ public class UnitTestResultSet {
         return patch;
     }
 
+    // this method is for checkpoints fitness
+    public void setPatch(Patch patch) {
+        this.patch = patch;
+    }
+
     public boolean getValidPatch() {
         return patchValid;
     }

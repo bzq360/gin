@@ -8,6 +8,7 @@ import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ReferenceCheckpointsGenerator extends Sampler {
 
@@ -28,12 +29,12 @@ public class ReferenceCheckpointsGenerator extends Sampler {
 
         // Create source file for line edits for the example method
         SourceFileTree sourceFile = new SourceFileTree(source, method.getMethodName());
-        Patch refPatchCP = CheckpointUtils.insertCheckpoints(new Patch(sourceFile));
+        Patch refPatchCP = new Patch(CheckpointUtils.insertCheckpoints(sourceFile));
 
         Logger.info("Running tests on the reference program");
 
         // Run all project tests (example sourceFile and className needed for TestRunner setup)
-        UnitTestResultSet results = testPatch(className, super.testData, refPatchCP);
+        UnitTestResultSet results = testPatch(className, new ArrayList<>(super.testData), refPatchCP);
 
         writeResults(results);
         try {

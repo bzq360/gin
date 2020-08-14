@@ -3,9 +3,8 @@ package gin.util;
 import com.sampullara.cli.Argument;
 import gin.Patch;
 import gin.checkpoints.CheckpointUtils;
-import gin.test.UnitTest;
-import gin.test.UnitTestResult;
-import gin.test.UnitTestResultSet;
+import gin.fitness.NovelFitnessCalculator;
+import gin.test.*;
 import org.pmw.tinylog.Logger;
 
 import java.io.File;
@@ -13,14 +12,15 @@ import java.util.*;
 
 public class GPCheckpointFix extends GPSimple {
 
+    private static int checkpointinvalidPatch = 0;
+
     @Argument(alias = "M", description = "Method file for reference program, required", required = true)
     protected String refMethodFilePath;
 
-    @Argument(alias = "C", description = "output checkpoint values into csv files")
-    protected boolean outputCheckpoints = false;
+    protected boolean outputCheckpoints = true;
 
     // initial faulty program results
-    private Map<UnitTest, Boolean> origTestResults = new HashMap<>();
+    private final Map<UnitTest, Boolean> origTestResults = new HashMap<>();
 
     private int origPassing = 0;
     private int origFailing = 0;
@@ -70,7 +70,7 @@ public class GPCheckpointFix extends GPSimple {
             // Add a mutation
             Patch patch = mutate(origPatch);
             // If fitnessThreshold met, add it
-            results = testPatchWithCheckpoints(className, tests, patch);
+            results = testPatch(className, tests, patch);
             double fitness = fitness(results);
             if (fitnessThreshold(results, orig)) {
                 population.put(patch, fitness);
@@ -101,14 +101,13 @@ public class GPCheckpointFix extends GPSimple {
 
             // Mutate the newly created population and check fitness
             for (Patch patch : crossoverPatches) {
-
                 // Add a mutation
                 patch = mutate(patch);
 
                 Logger.debug("Testing patch: " + patch);
 
                 // Test the patched source file
-                results = testPatchWithCheckpoints(className, tests, patch);
+                results = testPatch(className, tests, patch);
                 double newFitness = fitness(results);
 
                 // If fitness threshold met, add patch to the mating population
@@ -119,11 +118,14 @@ public class GPCheckpointFix extends GPSimple {
             }
 
             population = new HashMap<Patch, Double>(newPopulation);
+
             if (population.isEmpty()) {
                 population.put(origPatch, orig);
             }
 
         }
+
+        System.out.println("invalid checkpoint patch: " + checkpointinvalidPatch);
     }
 
     protected void generateReferenceCheckpoints() {
@@ -136,10 +138,30 @@ public class GPCheckpointFix extends GPSimple {
         CheckpointUtils.setupOriginalCheckpoints();
     }
 
-    protected UnitTestResultSet testPatchWithCheckpoints(String targetClass, List<UnitTest> tests, Patch patch) {
-        CheckpointUtils.setup(outputCheckpoints);
-        Patch patchCP = CheckpointUtils.insertCheckpoints(patch);
-        return testPatch(targetClass, tests, patchCP);
+    /*============== Override of sampler methods  ==============*/
+
+    protected UnitTestResultSet testPatch(String targetClass, List<UnitTest> tests, Patch patch) {
+
+        Logger.debug("Testing patch: " + patch);
+
+        patchCount++;
+
+        UnitTestResultSet resultSet = null;
+
+        if (!inSubprocess && !inNewSubprocess) {
+            resultSet = testPatchInternally(targetClass, tests, patch);
+        } else {
+            Logger.error("Checkpoints fitness does not support run in subprocess or new process");
+            System.exit(1);
+        }
+
+        return resultSet;
+
+    }
+
+    private UnitTestResultSet testPatchInternally(String targetClass, List<UnitTest> tests, Patch patch) {
+        CheckpointTestRunner testRunner = new CheckpointTestRunner(targetClass, classPath, tests);
+        return testRunner.runTests(patch, reps);
     }
 
 
@@ -149,10 +171,7 @@ public class GPCheckpointFix extends GPSimple {
     protected UnitTestResultSet initFitness(String className, List<UnitTest> tests, Patch origPatch) {
         super.reps = 1;
 
-        CheckpointUtils.setup(outputCheckpoints);
-        Patch origPatchCP = CheckpointUtils.insertCheckpoints(origPatch);
-
-        UnitTestResultSet results = testPatch(className, tests, origPatchCP);
+        UnitTestResultSet results = testPatch(className, tests, origPatch);
         for (UnitTestResult result : results.getResults()) {
             if (result.getPassed()) {
                 origTestResults.put(result.getTest(), true);
@@ -162,12 +181,18 @@ public class GPCheckpointFix extends GPSimple {
                 origFailing++;
             }
         }
+        results.setPatch(origPatch);
         return results;
     }
 
     @Override
     protected double fitness(UnitTestResultSet results) {
         double posScore = 0, negScore = 0;
+
+        if (!CheckpointUtils.isValidCheckpoints()) {
+            checkpointinvalidPatch++;
+            return NovelFitnessCalculator.calculate(results);
+        }
 
         // counting passing and failing test cases
         double passing = 0, failing = 0;
@@ -194,7 +219,7 @@ public class GPCheckpointFix extends GPSimple {
         for (UnitTestResult result : results.getResults()) {
             boolean origPass = origTestResults.get(result.getTest());
             boolean currPass = result.getPassed();
-            double distance = CheckpointUtils.computeDistance(index, origPass, currPass);
+            double distance = CheckpointUtils.computeDistance(index++, origPass, currPass, alpha, beta);
             if (origPass) {
                 posScore += distance;
             } else {
@@ -202,7 +227,14 @@ public class GPCheckpointFix extends GPSimple {
             }
         }
 
-        return weight * (posScore + negScore);
+        double score = weight * (posScore + negScore);
+        score = score / (score + 1);
+
+//        System.out.println("==============================");
+//        System.out.println("fitness of patch = " + score);
+//        System.out.println("==============================");
+
+        return score;
     }
 
     @Override

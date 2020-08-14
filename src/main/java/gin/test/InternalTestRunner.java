@@ -20,7 +20,7 @@ public class InternalTestRunner extends TestRunner {
 
     public static final String ISOLATED_TEST_RUNNER_METHOD_NAME = "runTests";
 
-    private CacheClassLoader classLoader;
+    protected CacheClassLoader classLoader;
 
     /**
      * Create an InternalTestRunner given a package.ClassName, a classpath string separated by colons if needed,
@@ -54,7 +54,7 @@ public class InternalTestRunner extends TestRunner {
         String patchedSource = patch.apply();
         boolean patchValid = patch.lastApplyWasValid();
         List<Boolean> editsValid = patch.getEditsInvalidOnLastApply();
-        
+
         // Did the code change as a result of applying the patch?
         boolean noOp = isPatchedSourceSame(patch.getSourceFile().toString(), patchedSource);
 
@@ -86,7 +86,7 @@ public class InternalTestRunner extends TestRunner {
      * @param classLoader CacheClassLoader containing correct classpath and any modified classes.
      * @return
      */
-    private LinkedList<UnitTestResult> runTests(int reps, CacheClassLoader classLoader) {
+    protected LinkedList<UnitTestResult> runTests(int reps, CacheClassLoader classLoader) {
 
         LinkedList<UnitTestResult> results = new LinkedList<>();
 

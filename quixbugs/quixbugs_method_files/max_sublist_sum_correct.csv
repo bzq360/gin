@@ -1,0 +1,2 @@
+Method,Tests
+correct_programs.MAX_SUBLIST_SUM.max_sublist_sum(int[]),"correct_programs.MAX_SUBLIST_SUM_TEST.test_0 [],correct_programs.MAX_SUBLIST_SUM_TEST.test_1 [],correct_programs.MAX_SUBLIST_SUM_TEST.test_2 [],correct_programs.MAX_SUBLIST_SUM_TEST.test_3 [],correct_programs.MAX_SUBLIST_SUM_TEST.test_4 [],correct_programs.MAX_SUBLIST_SUM_TEST.test_5 []"
