@@ -44,3 +44,5 @@ examples/unittests/ExampleWithInnerClassTest.class
 /.project
 /sampler_results.csv
 /checkpoint_logs/
+
+nbproject/
