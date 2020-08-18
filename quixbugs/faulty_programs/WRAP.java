@@ -8,12 +8,11 @@ import java.util.ArrayList;
  */
 
 /**
- *
  * @author derricklin
  */
 public class WRAP {
     public static void main(String[] args) {
-        System.out.println("abc".lastIndexOf("c",30));
+        System.out.println("abc".lastIndexOf("c", 30));
     }
 
     public static ArrayList<String> wrap(String text, int cols) {
@@ -25,7 +24,7 @@ public class WRAP {
             if (end == -1) {
                 end = cols;
             }
-            line = text.substring(0,end);
+            line = text.substring(0, end);
             text = text.substring(end);
             lines.add(line);
         }

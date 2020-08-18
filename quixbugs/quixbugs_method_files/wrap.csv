@@ -1,0 +1,3 @@
+"Method","Tests"
+"faulty_programs.WRAP.main(String[])","faulty_programs.WRAP_TEST.test_0 [],faulty_programs.WRAP_TEST.test_1 [],faulty_programs.WRAP_TEST.test_2 [],faulty_programs.WRAP_TEST.test_3 [],faulty_programs.WRAP_TEST.test_4 []"
+"faulty_programs.WRAP.wrap(String,int)","faulty_programs.WRAP_TEST.test_0 [],faulty_programs.WRAP_TEST.test_1 [],faulty_programs.WRAP_TEST.test_2 [],faulty_programs.WRAP_TEST.test_3 [],faulty_programs.WRAP_TEST.test_4 []"
