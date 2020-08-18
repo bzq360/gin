@@ -98,6 +98,14 @@ public class MERGESORT_TEST {
         assertEquals("[1,2,4,6,9,10,14,15,16,18,19]", resultFormatted);
     }
 
+    @org.junit.Test(timeout = 3000)
+    public void test_21() throws Exception {
+        java.util.ArrayList result = MERGESORT.mergesort(new java.util.ArrayList());
+        String resultFormatted = QuixFixOracleHelper.format(result,true);
+        assertEquals("[]", resultFormatted);
+    }
+
+
     // evosuite
 
     @Test(timeout = 4000)

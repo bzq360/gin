@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.pmw.tinylog.Logger;
 
-import static gin.fitness.NovelFitnessCalculator.normalize;
-
 public class DistanceMetric {
 
     enum ARRAY_DISTANCE_TYPE {LEVENSHTEIN, FOR_EACH}
@@ -53,6 +51,10 @@ public class DistanceMetric {
 
         Logger.error("assertion type not supported.");
         return -1;
+    }
+
+    public static double normalize(double x, double alpha) {
+        return x / (x + alpha);
     }
 
     public static int getIntDistance(int expect, int actual) {

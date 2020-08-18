@@ -3,7 +3,6 @@ package gin.util;
 import com.sampullara.cli.Argument;
 import gin.Patch;
 import gin.checkpoints.CheckpointUtils;
-import gin.fitness.NovelFitnessCalculator;
 import gin.test.*;
 import org.pmw.tinylog.Logger;
 
@@ -191,7 +190,8 @@ public class GPCheckpointFix extends GPSimple {
 
         if (!CheckpointUtils.isValidCheckpoints()) {
             checkpointinvalidPatch++;
-            return NovelFitnessCalculator.calculate(results);
+            // TODO:
+            return 0;
         }
 
         // counting passing and failing test cases
