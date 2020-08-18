@@ -64,6 +64,7 @@ public class NEXT_PERMUTATION_TEST {
     }
 
     // evosuite
+
     public void test_8()  throws Throwable  {
         NEXT_PERMUTATION nEXT_PERMUTATION0 = new NEXT_PERMUTATION();
     }

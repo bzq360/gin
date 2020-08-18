@@ -122,7 +122,6 @@ public class GPArjaEFix extends GPFix {
             } else {
                 distance = Integer.MAX_VALUE;
             }
-            String testName = result.getTest().getTestName();
             if (!testResults.get(result.getTest())) {
                 distance *= WEIGHT;
             }

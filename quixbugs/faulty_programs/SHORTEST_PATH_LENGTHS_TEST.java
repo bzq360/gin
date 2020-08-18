@@ -87,7 +87,6 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 
 	// evosuite
 
-
 	@Test(timeout = 60000)
 	public void test_4()  throws Throwable  {
 		SHORTEST_PATH_LENGTHS sHORTEST_PATH_LENGTHS0 = new SHORTEST_PATH_LENGTHS();
