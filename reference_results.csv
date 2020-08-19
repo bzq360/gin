@@ -1,7 +1,0 @@
-"PatchIndex","PatchSize","Patch","MethodIndex","TestIndex","UnitTest","RepNumber","PatchValid","PatchCompiled","TestPassed","TestExecutionTime(ns)","TestCPUTime(ns)","TestTimedOut","TestExceptionType","TestExceptionMessage","AssertionExpectedValue","AssertionActualValue","NoOp","EditsValid"
-"1","0","|","0","-46872931","correct_programs.MAX_SUBLIST_SUM_TEST.test_0 []","1","true","true","true","4426300","0","false","N/A","N/A","N/A","N/A","true",""
-"1","0","|","0","-46843140","correct_programs.MAX_SUBLIST_SUM_TEST.test_1 []","1","true","true","true","695000","0","false","N/A","N/A","N/A","N/A","true",""
-"1","0","|","0","-46813349","correct_programs.MAX_SUBLIST_SUM_TEST.test_2 []","1","true","true","true","744500","0","false","N/A","N/A","N/A","N/A","true",""
-"1","0","|","0","-46783558","correct_programs.MAX_SUBLIST_SUM_TEST.test_3 []","1","true","true","true","847700","0","false","N/A","N/A","N/A","N/A","true",""
-"1","0","|","0","-46753767","correct_programs.MAX_SUBLIST_SUM_TEST.test_4 []","1","true","true","true","1008900","0","false","N/A","N/A","N/A","N/A","true",""
-"1","0","|","0","-46723976","correct_programs.MAX_SUBLIST_SUM_TEST.test_5 []","1","true","true","true","620200","0","false","N/A","N/A","N/A","N/A","true",""

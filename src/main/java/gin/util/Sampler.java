@@ -460,6 +460,7 @@ public abstract class Sampler {
         try {
             outputFileWriter = new CSVWriter(new FileWriter(outputFile));
             outputFileWriter.writeNext(OUT_HEADER);
+            outputFileWriter.flush();
         } catch (IOException e) {
             Logger.error(e, "Exception writing header to the output file: " + outputFile.getAbsolutePath());
             Logger.trace(e);
@@ -532,6 +533,11 @@ public abstract class Sampler {
         };
 
         outputFileWriter.writeNext(entry);
+        try {
+            outputFileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void close() {

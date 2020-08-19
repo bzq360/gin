@@ -23,11 +23,11 @@ import com.sampullara.cli.Argument;
 import gin.edit.Edit.EditType;
 
 /**
- *   A handy utility for analysing patches. Not part of the main gin system.
+ * A handy utility for analysing patches. Not part of the main gin system.
  */
 public class PatchAnalyser {
 
-    private static final int REPS = 10;
+    private static final int REPS = 1;
 
     @Argument(alias = "f", description = "Required: Source filename", required = true)
     protected File source = null;
@@ -47,6 +47,13 @@ public class PatchAnalyser {
     @Argument(alias = "t", description = "Test class name")
     protected String testClassName;
 
+    @Argument(alias = "b", description = "Base directory of generated files")
+    protected String baseDir = "";
+
+    @Argument(alias = "id", description = "id of the generated patch")
+    protected String id;
+
+
     private SourceFileLine sourceFileLine;
     private SourceFileTree sourceFileTree;
     private InternalTestRunner testRunner;
@@ -65,17 +72,17 @@ public class PatchAnalyser {
 
         this.sourceFileTree = new SourceFileTree(source.getAbsolutePath(), null);
         if (this.packageDir == null) {
-                this.packageDir = this.source.getParentFile().getAbsoluteFile();
-            }
-            if (this.classPath == null) {
-                this.classPath = this.packageDir.getAbsolutePath();
-            }
-            if (this.className == null) {
-                this.className = FilenameUtils.removeExtension(this.source.getName());
-            }
-            if (this.testClassName == null) {
-                this.testClassName = this.className + "Test";
-            }
+            this.packageDir = this.source.getParentFile().getAbsoluteFile();
+        }
+        if (this.classPath == null) {
+            this.classPath = this.packageDir.getAbsolutePath();
+        }
+        if (this.className == null) {
+            this.className = FilenameUtils.removeExtension(this.source.getName());
+        }
+        if (this.testClassName == null) {
+            this.testClassName = this.className + "Test";
+        }
 
     }
 
@@ -102,7 +109,7 @@ public class PatchAnalyser {
 
         // Dump block numbering to a file
         String blockNumbering = sourceFileTree.blockList();
-        String blockFilename = source + ".blocks";
+        String blockFilename = baseDir + '/' + source + ".blocks";
         try {
             FileUtils.writeStringToFile(new File(blockFilename), blockNumbering, Charset.defaultCharset());
         } catch (IOException e) {
@@ -120,7 +127,9 @@ public class PatchAnalyser {
         Logger.info("Patch is: " + patchText);
 
         // Write the patched source to file, for reference
-        String patchedFilename = source + ".patched";
+        String patchedFilename = (id == null)
+                ? baseDir + '/' + source + ".patched"
+                : baseDir + '/' + id;
         try {
             FileUtils.writeStringToFile(new File(patchedFilename), patchedSource, Charset.defaultCharset());
         } catch (IOException e) {
@@ -137,7 +146,7 @@ public class PatchAnalyser {
         Logger.info("Original execution time: " + originalExecutionTime);
 
         // Write the original source to file, for easy diff with *.patched file
-        patchedFilename = source + ".original";
+        patchedFilename = baseDir + '/' + source + ".original";
         try {
             FileUtils.writeStringToFile(new File(patchedFilename), emptyPatch.apply(), Charset.defaultCharset());
         } catch (IOException e) {
@@ -167,14 +176,14 @@ public class PatchAnalyser {
 
     private static Patch parsePatch(String patchText, SourceFileLine sourceFileLine, SourceFileTree sourceFileTree) {
 
-	if (patchText.equals("|")) {
-	    Logger.info("No edits to be applied. Running original code.");
-	    Patch patch = new Patch(sourceFileTree);
-	    return patch;
-	}
+        if (patchText.equals("|")) {
+            Logger.info("No edits to be applied. Running original code.");
+            Patch patch = new Patch(sourceFileTree);
+            return patch;
+        }
 
         List<Edit> editInstances = new ArrayList<>();
-        
+
         String patchTrim = patchText.trim();
         String cleanPatch = patchTrim;
 
@@ -183,11 +192,11 @@ public class PatchAnalyser {
         }
 
         String[] editStrings = cleanPatch.trim().split("\\|");
-        
+
         boolean allLineEdits = true;
         boolean allStatementEdits = true;
-        
-        for (String editString: editStrings) {
+
+        for (String editString : editStrings) {
 
             String[] tokens = editString.trim().split("\\s+");
 
@@ -228,14 +237,14 @@ public class PatchAnalyser {
             allLineEdits &= editInstance.getEditType() == EditType.LINE;
             allStatementEdits &= editInstance.getEditType() != EditType.LINE;
             editInstances.add(editInstance);
-            
+
         }
-        
+
         if (!allLineEdits && !allStatementEdits) {
             Logger.error("Cannot proceed: mixed line/statement edit types found in patch");
             System.exit(-1);
         }
-        
+
         Patch patch = new Patch(allLineEdits ? sourceFileLine : sourceFileTree);
         for (Edit e : editInstances) {
             patch.add(e);
@@ -254,8 +263,7 @@ public class PatchAnalyser {
         Logger.info("All tests successful: " + results.allTestsSuccessful());
         Logger.info("Total execution time: " + results.totalExecutionTime());
 
-
-        for (UnitTestResult result: results.getResults()) {
+        for (UnitTestResult result : results.getResults()) {
             Logger.info(result);
         }
 
