@@ -36,5 +36,13 @@ public class WRAP_TEST {
         String resultFormatted = QuixFixOracleHelper.format(result,true);
         org.junit.Assert.assertEquals("[Theleavesdidnotstironthetrees,grasshopperschirruped,andthemonotonoushollowsoundofthesearisingupfrombelow,spokeofthe,peace,oftheeternalsleepawaitingus.SoitmusthavesoundedwhentherewasnoYalta,noOreandahere;soitsoundsnow,anditwill,soundasindifferentlyandmonotonouslywhenweareallnomore.Andinthisconstancy,inthiscompleteindifferencetothelifeanddeath,ofeachofus,therelieshid,perhaps,apledgeofoureternalsalvation,oftheunceasingmovementoflifeuponearth,ofunceasing,progresstowardsperfection.Sittingbesideayoungwomanwhointhedawnseemedsolovely,soothedandspellboundinthesemagical,surroundings-thesea,mountains,clouds,theopensky-Gurovthoughthowinrealityeverythingisbeautifulinthisworldwhenone,reflects:everythingexceptwhatwethinkordoourselveswhenweforgetourhumandignityandthehigheraimsofourexistence.]", resultFormatted);
     }
+
+    //new passing tests
+    @org.junit.Test(timeout = 3000)
+    public void test_11() throws Exception {
+        java.util.ArrayList result = faulty_programs.WRAP.wrap("", (100));
+        String resultFormatted = QuixFixOracleHelper.format(result, true);
+        org.junit.Assert.assertEquals("[]", resultFormatted);
+    }
 }
 

@@ -5,7 +5,8 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 
 public class SHORTEST_PATH_LENGTHS_TEST {
@@ -83,5 +84,44 @@ public class SHORTEST_PATH_LENGTHS_TEST {
 			}		
 		}
 	}
+
+	// evosuite
+
+	@Test(timeout = 60000)
+	public void test_4() throws Throwable {
+		SHORTEST_PATH_LENGTHS sHORTEST_PATH_LENGTHS0 = new SHORTEST_PATH_LENGTHS();
+	}
+
+	@Test(timeout = 60000)
+	public void test_5() throws Throwable {
+		// Undeclared exception!
+		try {
+			SHORTEST_PATH_LENGTHS.shortest_path_lengths(1375, (Map<List<Integer>, Integer>) null);
+			fail("Expecting exception: NullPointerException");
+
+		} catch (NullPointerException e) {
+			//
+			// no message in exception (getMessage() returned null)
+			//
+		}
+	}
+
+	@Test(timeout = 60000)
+	public void test_6() throws Throwable {
+		HashMap<List<Integer>, Integer> hashMap0 = new HashMap<List<Integer>, Integer>();
+		Map<List<Integer>, Integer> map0 = SHORTEST_PATH_LENGTHS.shortest_path_lengths((-3813), hashMap0);
+		assertTrue(map0.isEmpty());
+	}
+
+	@Test(timeout = 60000)
+	public void test_7() throws Throwable {
+		HashMap<List<Integer>, Integer> hashMap0 = new HashMap<List<Integer>, Integer>();
+		Map<List<Integer>, Integer> map0 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(2, hashMap0);
+		Map<List<Integer>, Integer> map1 = SHORTEST_PATH_LENGTHS.shortest_path_lengths(2, map0);
+		assertTrue(map1.equals((Object) map0));
+		assertEquals(4, map1.size());
+	}
+
+
 
 }

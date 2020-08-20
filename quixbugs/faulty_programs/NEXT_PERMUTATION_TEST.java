@@ -3,6 +3,7 @@ package faulty_programs;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -61,6 +62,28 @@ public class NEXT_PERMUTATION_TEST {
         java.util.ArrayList result = NEXT_PERMUTATION.next_permutation(new java.util.ArrayList(java.util.Arrays.asList(3,4,5)));
         String resultFormatted = QuixFixOracleHelper.format(result,true);
         assertEquals("[3,5,4]", resultFormatted);
+    }
+
+    // new passing tests
+    @org.junit.Test(timeout = 3000)
+    public void test_16() throws Exception {
+        java.util.ArrayList result = NEXT_PERMUTATION.next_permutation(new java.util.ArrayList(java.util.Arrays.asList(1,1,1)));
+        String resultFormatted = QuixFixOracleHelper.format(result,true);
+        org.junit.Assert.assertEquals("[]", resultFormatted);
+    }
+
+    @org.junit.Test(timeout = 3000)
+    public void test_17() throws Exception {
+        java.util.ArrayList result = NEXT_PERMUTATION.next_permutation(new java.util.ArrayList(java.util.Arrays.asList(3,2,1)));
+        String resultFormatted = QuixFixOracleHelper.format(result,true);
+        org.junit.Assert.assertEquals("[]", resultFormatted);
+    }
+
+    @org.junit.Test(timeout = 3000)
+    public void test_18() throws Exception {
+        java.util.ArrayList result = NEXT_PERMUTATION.next_permutation(new java.util.ArrayList(Collections.singletonList(0)));
+        String resultFormatted = QuixFixOracleHelper.format(result,true);
+        org.junit.Assert.assertEquals("[]", resultFormatted);
     }
 
     // evosuite
