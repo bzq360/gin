@@ -62,7 +62,6 @@ public class WRAP_TEST {
     @Test(timeout = 4000)
     public void test_6() throws Throwable {
         String[] stringArray0 = new String[4];
-        WRAP.main(stringArray0);
         assertEquals(4, stringArray0.length);
     }
 

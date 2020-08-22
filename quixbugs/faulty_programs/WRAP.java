@@ -11,9 +11,6 @@ import java.util.ArrayList;
  * @author derricklin
  */
 public class WRAP {
-    public static void main(String[] args) {
-        System.out.println("abc".lastIndexOf("c", 30));
-    }
 
     public static ArrayList<String> wrap(String text, int cols) {
         ArrayList<String> lines = new ArrayList<String>();

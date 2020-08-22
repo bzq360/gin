@@ -94,37 +94,8 @@ public class PatchAnalyser {
 
         this.testRunner = new InternalTestRunner(className, classPath, testClassName);
 
-        // Dump statement numbering to a file
-        String statementNumbering = sourceFileTree.statementList();
-        String statementFilename = source + ".statements";
-        try {
-            FileUtils.writeStringToFile(new File(statementFilename), statementNumbering, Charset.defaultCharset());
-        } catch (IOException e) {
-            Logger.error("Could not write statements to " + statementFilename);
-            Logger.trace(e);
-            System.exit(-1);
-        }
-
-        Logger.info("Statement numbering written to: " + statementFilename);
-
-        // Dump block numbering to a file
-        String blockNumbering = sourceFileTree.blockList();
-        String blockFilename = baseDir + '/' + source + ".blocks";
-        try {
-            FileUtils.writeStringToFile(new File(blockFilename), blockNumbering, Charset.defaultCharset());
-        } catch (IOException e) {
-            Logger.error("Could not write blocks to " + blockFilename);
-            Logger.trace(e);
-            System.exit(-1);
-        }
-        Logger.info("Block numbering written to: " + blockFilename);
-
         Patch patch = parsePatch(patchText, sourceFileLine, sourceFileTree);
         String patchedSource = patch.apply();
-
-        Logger.info("Evaluating patch for Source: " + source);
-
-        Logger.info("Patch is: " + patchText);
 
         // Write the patched source to file, for reference
         String patchedFilename = (id == null)
@@ -137,47 +108,19 @@ public class PatchAnalyser {
             Logger.trace(e);
             System.exit(-1);
         }
-        Logger.info("Parsed patch written to: " + patchedFilename);
-
-        // Evaluate original class
-        Logger.info("Timing original class execution...");
-        Patch emptyPatch = new Patch(sourceFileTree);
-        long originalExecutionTime = testRunner.runTests(emptyPatch, REPS).totalExecutionTime();
-        Logger.info("Original execution time: " + originalExecutionTime);
-
-        // Write the original source to file, for easy diff with *.patched file
-        patchedFilename = baseDir + '/' + source + ".original";
-        try {
-            FileUtils.writeStringToFile(new File(patchedFilename), emptyPatch.apply(), Charset.defaultCharset());
-        } catch (IOException e) {
-            Logger.error("Could not write patched source to " + patchedFilename);
-            Logger.trace(e);
-            System.exit(-1);
-        }
-        Logger.info("Parsed patch written to: " + patchedFilename);
 
         // Evaluate patch
-        Logger.info("Timing patched sourceFile execution...");
         UnitTestResultSet resultSet = testRunner.runTests(patch, REPS);
 
         // Output test results
         logTestResults(resultSet);
-
-        Logger.info("Execution time of patched sourceFile: " + resultSet.totalExecutionTime());
-        float speedup = 100.0f * ((originalExecutionTime - resultSet.totalExecutionTime()) /
-                (1.0f * originalExecutionTime));
-        if (resultSet.getValidPatch() && resultSet.getCleanCompile()) {
-            Logger.info("Speedup (%): " + speedup);
-        } else {
-            Logger.info("Speedup (%): not applicable");
-        }
 
     }
 
     private static Patch parsePatch(String patchText, SourceFileLine sourceFileLine, SourceFileTree sourceFileTree) {
 
         if (patchText.equals("|")) {
-            Logger.info("No edits to be applied. Running original code.");
+//            Logger.info("No edits to be applied. Running original code.");
             Patch patch = new Patch(sourceFileTree);
             return patch;
         }
@@ -256,16 +199,16 @@ public class PatchAnalyser {
 
     private static void logTestResults(UnitTestResultSet results) {
 
-        Logger.info("Test Results");
-        Logger.info("Number of results: " + results.getResults().size());
-        Logger.info("Valid patch: " + results.getValidPatch());
-        Logger.info("Cleanly compiled: " + results.getCleanCompile());
+//        Logger.info("Test Results");
+//        Logger.info("Number of results: " + results.getResults().size());
+//        Logger.info("Valid patch: " + results.getValidPatch());
+//        Logger.info("Cleanly compiled: " + results.getCleanCompile());
         Logger.info("All tests successful: " + results.allTestsSuccessful());
-        Logger.info("Total execution time: " + results.totalExecutionTime());
+//        Logger.info("Total execution time: " + results.totalExecutionTime());
 
-        for (UnitTestResult result : results.getResults()) {
-            Logger.info(result);
-        }
+//        for (UnitTestResult result : results.getResults()) {
+//            Logger.info(result);
+//        }
 
     }
 
