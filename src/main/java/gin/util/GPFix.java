@@ -47,7 +47,7 @@ public class GPFix extends GPSimple {
     }
 
     // Arguments used in fitness calculation
-    private static int weight = 2;
+    private static double weight = 2;
     private double multiplier = 0;
     private double targetFitness = -1;
     private Map<UnitTest, Boolean> testResults = new HashMap<>();
@@ -96,7 +96,7 @@ public class GPFix extends GPSimple {
             recordedFitness.put(patch, fitness);
         }
         if (fitness == this.targetFitness) {
-            Logger.info("Found individual with target fitness: " + patch);
+            Logger.info("Found individual with target fitness.");
         }
         return fitness;
     }

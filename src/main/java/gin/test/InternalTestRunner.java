@@ -158,9 +158,9 @@ public class InternalTestRunner extends TestRunner {
 
         int threadsAfter = getNumberOfThreads();
 
-        if (threadsAfter != threadsBefore) {
-            Logger.warn("Possible hanging threads remain after test");
-        }
+//        if (threadsAfter != threadsBefore) {
+//            Logger.warn("Possible hanging threads remain after test");
+//        }
         
         UnitTestResult res = (UnitTestResult) result;
 
