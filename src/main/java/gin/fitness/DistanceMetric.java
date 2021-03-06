@@ -53,14 +53,35 @@ public class DistanceMetric {
         return -1;
     }
 
+    /**
+     * normalize the double data into the range of [0, 1)
+     *
+     * @param x     the double data to be normalized
+     * @param alpha the normalization parameter
+     * @return the normalized data
+     */
     public static double normalize(double x, double alpha) {
         return x / (x + alpha);
     }
 
+    /**
+     * compute the distance between the expected and actual assertion integers
+     *
+     * @param expect the expected assertion integer
+     * @param actual the actual assertion integer
+     * @return the integer distance between the expected and actual assertion integers
+     */
     public static int getIntDistance(int expect, int actual) {
         return Math.abs(expect - actual);
     }
 
+    /**
+     * compute the distance between the expected and actual assertion doubles
+     *
+     * @param expect the expected assertion double
+     * @param actual the actual assertion double
+     * @return the integer distance between the expected and actual assertion doubles
+     */
     public static double getDoubleDistance(double expect, double actual) {
         return Math.abs(expect - actual);
     }
@@ -79,6 +100,7 @@ public class DistanceMetric {
 
     /**
      * compute distance between two int arrays
+     *
      * @param expectArrStr expected string of assertion array
      * @param actualArrStr actual string of assertion array
      * @return array distance between [0,1]
@@ -106,6 +128,7 @@ public class DistanceMetric {
 
     /**
      * compute distance between two double arrays
+     *
      * @param expectArrStr expected string of assertion array
      * @param actualArrStr actual string of assertion array
      * @return array distance between [0,1]
@@ -133,6 +156,7 @@ public class DistanceMetric {
 
     /**
      * compute distance between two string arrays
+     *
      * @param expectArrStr expected string of assertion array
      * @param actualArrStr actual string of assertion array
      * @return array distance between [0,1]
@@ -157,7 +181,6 @@ public class DistanceMetric {
 
         return -1;
     }
-
 
 
 }
