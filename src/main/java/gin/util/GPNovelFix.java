@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static gin.fitness.DistanceMetric.getDistanceUnknownType;
+import static gin.fitness.DistanceMetric.getMaxPenaltyDistance;
 
 
 public class GPNovelFix extends GPSimple {
@@ -89,42 +90,38 @@ public class GPNovelFix extends GPSimple {
 
     // fitness calculation process
     private double calculate(UnitTestResultSet results) {
-        int numOfFailedTests = 0;
-        double score = 0;
-
         List<UnitTestResult> failedTests = new ArrayList<>();
 
         // count number of passed and failed tests
+        int failing = 0, passing = 0;
         for (UnitTestResult result : results.getResults()) {
-            if (!result.getPassed()) {
-                numOfFailedTests++;
+            if (result.getPassed()) {
+                passing++;
+            } else {
+                failing++;
                 failedTests.add(result);
             }
         }
 
-        // sum up distance of all
-        for (UnitTestResult result : failedTests) {
-            String exceptionType = result.getExceptionType();
-            double nor_dis = 0;
-            if (exceptionType.equals(UnitTestResult.ASSERTION_ERROR) || exceptionType.equals(UnitTestResult.COMPARISON_FAILURE)) {
-                double distance = getDistanceUnknownType(result.getAssertionExpectedValue(), result.getAssertionActualValue(), false);
-                nor_dis = normalize(distance, 1) / numOfFailedTests;
-            } else {
-                nor_dis = normalize(Integer.MAX_VALUE, 1) / numOfFailedTests;
-            }
-            score += nor_dis;
+        if (failing == 0) {
+            return passing + 1;
         }
 
-        score += numOfFailedTests;
+        // sum up distance of all
+        double sumOfDistance = 0;
+        for (UnitTestResult result : failedTests) {
+            String exceptionType = result.getExceptionType();
+            if (exceptionType.equals(UnitTestResult.ASSERTION_ERROR)
+                    || exceptionType.equals(UnitTestResult.COMPARISON_FAILURE)) {
+                double normalizedDistance = getDistanceUnknownType(result.getAssertionExpectedValue(), result.getAssertionActualValue());
+                sumOfDistance += normalizedDistance;
+            } else {
+                sumOfDistance += getMaxPenaltyDistance();
+            }
+        }
 
-        // the goal is to maximum the fitness
-        score = results.getResults().size() + 1 - score;
-
-        return score;
-    }
-
-    public double normalize(double x, double alpha) {
-        return x / (x + alpha);
+        // the goal is to maximise the fitness
+        return passing + (1 - sumOfDistance / failing);
     }
 
 }

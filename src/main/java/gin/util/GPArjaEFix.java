@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static gin.fitness.DistanceMetric.getDistanceUnknownType;
+import static gin.fitness.DistanceMetric.normalize;
 
 public class GPArjaEFix extends GPFix {
 
@@ -39,6 +40,10 @@ public class GPArjaEFix extends GPFix {
     private Map<Patch, Double> recordedFitness = new HashMap<>();
 
     private Map<UnitTest, Boolean> testResults = new HashMap<>();
+
+    private int passing = 0;
+
+    private int failing = 0;
 
     private static final double WEIGHT = 0.2;
 
@@ -93,49 +98,47 @@ public class GPArjaEFix extends GPFix {
 
     // Set multiplier and test data for fitness calculations
     private void setup(UnitTestResultSet results) {
-        int passing = 0;
-        int failing = 0;
-        this.testResults = new HashMap<>();
-        this.recordedFitness = new HashMap<>();
+        testResults = new HashMap<>();
+        recordedFitness = new HashMap<>();
 
         for (UnitTestResult testResult : results.getResults()) {
             if (testResult.getPassed()) {
-                this.testResults.put(testResult.getTest(), true);
+                testResults.put(testResult.getTest(), true);
                 passing += 1;
             } else {
-                this.testResults.put(testResult.getTest(), false);
+                testResults.put(testResult.getTest(), false);
                 failing += 1;
             }
         }
         Logger.info("Currently failing tests: " + failing);
         Logger.info("Currently passing tests (i.e., current fitness): " + passing);
-        Logger.info("Fitness range: [0, 1]");
     }
 
     private double calculate(UnitTestResultSet results) {
-        double score = 0;
+        double posScore = 0, negScore = 0;
         for (UnitTestResult result : results.getResults()) {
             String exceptionType = result.getExceptionType();
-            double distance = 0;
-            if (exceptionType.equals(UnitTestResult.ASSERTION_ERROR) || exceptionType.equals(UnitTestResult.COMPARISON_FAILURE)) {
-                distance = getDistanceUnknownType(result.getAssertionExpectedValue(), result.getAssertionActualValue(), false);
+            if (exceptionType.equals(UnitTestResult.ASSERTION_ERROR)
+                    || exceptionType.equals(UnitTestResult.COMPARISON_FAILURE)) {
+                double normalizedDistance = getDistanceUnknownType(result.getAssertionExpectedValue(), result.getAssertionActualValue());
+                if (testResults.get(result.getTest())) {
+                    posScore += normalizedDistance;
+                } else {
+                    negScore += normalizedDistance;
+                }
             } else {
-                distance = Integer.MAX_VALUE;
+                if (testResults.get(result.getTest())) {
+                    posScore += Integer.MAX_VALUE;
+                } else {
+                    negScore += Integer.MAX_VALUE;
+                }
             }
-            if (!testResults.get(result.getTest())) {
-                distance *= WEIGHT;
-            }
-            score += distance;
         }
 
-        // the goal is to maximum the fitness score
-        score = 1 - normalize(score, 1);
+        double score = posScore / passing + WEIGHT * (negScore / failing);
 
-        return score;
-    }
-
-    private double normalize(double x, double alpha) {
-        return x / (x + alpha);
+        // the goal is to maximise the fitness score
+        return 1 - normalize(score);
     }
 
 }

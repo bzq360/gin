@@ -48,7 +48,7 @@ public class AssertionValueTypeChecker {
 
         // if both types are string array, return string array
         if (checkType(a) == AssertionValueType.STRING_ARRAY && isArray(b)
-        || (checkType(b) == AssertionValueType.STRING_ARRAY && isArray(a)))
+                || (checkType(b) == AssertionValueType.STRING_ARRAY && isArray(a)))
             return AssertionValueType.STRING_ARRAY;
 
         // if any type is string, return string
