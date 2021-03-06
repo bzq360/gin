@@ -88,7 +88,6 @@ public class GPNovelFix extends GPSimple {
 
     /*============== Helper method  ==============*/
 
-    // fitness calculation process
     private double calculate(UnitTestResultSet results) {
         List<UnitTestResult> failedTests = new ArrayList<>();
 
