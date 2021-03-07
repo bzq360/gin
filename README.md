@@ -1,6 +1,7 @@
 # Refining Fitness Functions for Search-Based Program Repair
 
-This is an artefact to accompany the "Refining Fitness Functions for Search-Based Program Repair" paper by Zhqiang Bian, Aymeric Blot and Justyna Petke. This repository is forked from the original Gin repository https://github.com/gintool/gin.
+This is an artefact to accompany the "Refining Fitness Functions for Search-Based Program Repair" paper by Zhqiang Bian, Aymeric Blot and Justyna Petke. 
+This repository is forked from the original Gin repository https://github.com/gintool/gin/commit/5cf4861cce58b5cd7f39c49bff20441442db9f70.
 
 ## Implementation
 
