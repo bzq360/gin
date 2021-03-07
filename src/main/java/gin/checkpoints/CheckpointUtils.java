@@ -172,10 +172,6 @@ public class CheckpointUtils {
         }
 
         score = score / checkpointsLst.size();
-            // TODO: delete
-//        System.out.println("---------------------------------------------------");
-//        System.out.println("test case id: " + testCaseID + "; score = " + score);
-//        System.out.println("---------------------------------------------------");
 
         return score;
     }

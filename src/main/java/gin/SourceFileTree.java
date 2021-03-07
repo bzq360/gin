@@ -110,7 +110,7 @@ public class SourceFileTree extends SourceFile {
     }
 
     /**
-     * create a copy of a source file TODO: make this a clone? SB: might want to avoid clone.
+     * create a copy of a source file
      * http://techarticles-wasim.blogspot.com/2011/11/java-clone-method-why-to-avoid-no.html
      * <p>
      * this is only called by methods within this class that are going to make a change

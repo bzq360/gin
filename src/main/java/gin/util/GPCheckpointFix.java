@@ -190,7 +190,6 @@ public class GPCheckpointFix extends GPSimple {
 
         if (!CheckpointUtils.isValidCheckpoints()) {
             checkpointinvalidPatch++;
-            // TODO:
             return 0;
         }
 
